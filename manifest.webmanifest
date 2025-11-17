@@ -1,8 +1,8 @@
 {
   "name": "Pedidos Express",
   "short_name": "Express",
-  "start_url": "/ExpressApp/Calc.html",
-  "scope": "/ExpressApp/",
+  "start_url": "/Burgers/Calc.html",
+  "scope": "/Burgers/",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
