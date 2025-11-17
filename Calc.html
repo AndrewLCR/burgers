@@ -718,42 +718,42 @@
             window.open(url, "_blank");
           };
 
-          fetch(CONFIG.WEBHOOK, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ rows }),
-          })
-            .then(async (r) => {
-              if (!r.ok) throw new Error("HTTP " + r.status);
-              const resp = await r.json();
-              if (resp.error) throw new Error(resp.error);
+          // fetch(CONFIG.WEBHOOK, {
+          //   method: "POST",
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //   },
+          //   body: JSON.stringify({ rows }),
+          // })
+          //   .then(async (r) => {
+          //     if (!r.ok) throw new Error("HTTP " + r.status);
+          //     const resp = await r.json();
+          //     if (resp.error) throw new Error(resp.error);
 
-              flash("Enviado a Sheets");
-              maybeOpenWhatsApp();
-              clearList();
-            })
-            .catch(async (err) => {
-              console.error("Error normal, probando modo compat:", err);
+          //     flash("Enviado a Sheets");
+          //     maybeOpenWhatsApp();
+          //     clearList();
+          //   })
+          //   .catch(async (err) => {
+          //     console.error("Error normal, probando modo compat:", err);
 
-              // fallback no-cors
-              await fetch(CONFIG.WEBHOOK, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ rows }),
-              });
+          //     // fallback no-cors
+          //     await fetch(CONFIG.WEBHOOK, {
+          //       method: "POST",
+          //       mode: "no-cors",
+          //       headers: { "Content-Type": "application/json" },
+          //       body: JSON.stringify({ rows }),
+          //     });
 
-              flash("Enviado a Sheets (modo compatible)");
-              maybeOpenWhatsApp();
-              clearList();
-            })
-            .finally(() => setGsLoading(false));
+          //     flash("Enviado a Sheets (modo compatible)");
+          //     maybeOpenWhatsApp();
+          //     clearList();
+          //   })
+          //   .finally(() => setGsLoading(false));
         }
 
         addBtn.addEventListener("click", addItem);
-        gsBtn.addEventListener("click", sendToGoogleSheets);
+        // gsBtn.addEventListener("click", sendToGoogleSheets);
         clearBtn.addEventListener("click", clearList);
 
         // PWA
