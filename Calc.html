@@ -718,45 +718,36 @@
             window.open(url, "_blank");
           };
 
-          fetch(CONFIG.WEBHOOK, { method: "POST", body })
+          fetch(CONFIG.WEBHOOK, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ rows }),
+          })
             .then(async (r) => {
-              const text = await r.text();
-              if (!r.ok || /^ERROR:/i.test(text)) {
-                throw new Error(text || "HTTP " + r.status);
-              }
+              if (!r.ok) throw new Error("HTTP " + r.status);
+              const resp = await r.json();
+              if (resp.error) throw new Error(resp.error);
+
               flash("Enviado a Sheets");
               maybeOpenWhatsApp();
               clearList();
             })
-            .catch(() => {
-              return fetch(CONFIG.WEBHOOK, {
+            .catch(async (err) => {
+              console.error("Error normal, probando modo compat:", err);
+
+              // fallback no-cors
+              await fetch(CONFIG.WEBHOOK, {
                 method: "POST",
-                body,
                 mode: "no-cors",
-              })
-                .then(() => {
-                  flash("Enviado a Sheets (modo compatible)");
-                  maybeOpenWhatsApp();
-                  clearList();
-                })
-                .catch(() => {
-                  try {
-                    const form = new FormData();
-                    form.append("payload", JSON.stringify({ rows }));
-                    const ok = navigator.sendBeacon(CONFIG.WEBHOOK, form);
-                    if (ok) {
-                      flash("Enviado a Sheets (beacon)");
-                      maybeOpenWhatsApp();
-                      clearList();
-                    } else {
-                      throw new Error("sendBeacon no envió");
-                    }
-                  } catch (err3) {
-                    console.error(err3);
-                    alert("Error al enviar a Sheets.");
-                    flash("Error: no se pudo enviar");
-                  }
-                });
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ rows }),
+              });
+
+              flash("Enviado a Sheets (modo compatible)");
+              maybeOpenWhatsApp();
+              clearList();
             })
             .finally(() => setGsLoading(false));
         }

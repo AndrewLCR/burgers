@@ -30,23 +30,21 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const req = event.request;
 
-  // Network-first para llamadas a Apps Script (POST/GET)
   if (req.url.includes("script.google.com/macros")) {
-    event.respondWith(fetch(req).catch(() => caches.match(req)));
-    return;
+    return; // No tocar requests al backend
   }
 
-  // Cache-first para assets estáticos
+  // Cache-first para assets
   event.respondWith(
     caches.match(req).then(
       (cached) =>
         cached ||
         fetch(req)
           .then((res) => {
-            // Opcional: cachear nuevas respuestas GET
             if (req.method === "GET" && res && res.status === 200) {
-              const resClone = res.clone();
-              caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
+              caches
+                .open(CACHE_NAME)
+                .then((cache) => cache.put(req, res.clone()));
             }
             return res;
           })
