@@ -725,6 +725,7 @@
               `https://wa.me/${CONFIG.WHATSAPP_NUMBER}?text=` +
               encodeURIComponent(txt);
             window.open(url, "_blank");
+            clearList();
           };
 
           // fetch(CONFIG.WEBHOOK, {
