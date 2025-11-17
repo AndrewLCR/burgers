@@ -687,15 +687,6 @@
           }
         }
 
-        const maybeOpenWhatsApp = () => {
-          // if (!isMobileDevice()) return; // en desktop NO abrir WhatsApp
-          const txt = poAsText();
-          const url =
-            `https://wa.me/${CONFIG.WHATSAPP_NUMBER}?text=` +
-            encodeURIComponent(txt);
-          window.open(url, "_blank");
-        };
-
         // Sheets → (WhatsApp solo si móvil) → limpiar
         function sendToGoogleSheets() {
           if (!state.items.length) {
@@ -724,9 +715,11 @@
             const url =
               `https://wa.me/${CONFIG.WHATSAPP_NUMBER}?text=` +
               encodeURIComponent(txt);
-            clearList();
             window.open(url, "_blank");
           };
+
+          maybeOpenWhatsApp();
+          clearList();
 
           // fetch(CONFIG.WEBHOOK, {
           //   method: "POST",
@@ -763,7 +756,7 @@
         }
 
         addBtn.addEventListener("click", addItem);
-        gsBtn.addEventListener("click", maybeOpenWhatsApp);
+        gsBtn.addEventListener("click", sendToGoogleSheets);
         clearBtn.addEventListener("click", clearList);
 
         // PWA
