@@ -1,4 +1,4 @@
-const CACHE_NAME = "burgers-cache-v2"; // súbelo para forzar refresh
+const CACHE_NAME = "burgers-cache-v3"; // súbelo para forzar refresh
 const ASSETS = [
   "/Burgers/",
   "/Burgers/Calc.html",
